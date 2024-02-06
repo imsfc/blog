@@ -5,10 +5,12 @@ import Footer from '@/components/Footer.astro'
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts'
 import { getCollection } from 'astro:content'
 import FormattedDate from '@/components/FormattedDate.astro'
+import ButtonLink from '@/components/ButtonLink.astro'
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 )
+const latestPosts = posts.slice(0, 5)
 ---
 
 <!doctype html>
@@ -22,7 +24,7 @@ const posts = (await getCollection('blog')).sort(
       <h1 class="text-4xl font-bold mb-6">Latest Posts</h1>
       <ul>
         {
-          posts.map((post) => (
+          latestPosts.map((post) => (
             <li>
               <section class="bg-white rounded-lg p-6 mb-4 shadow-md">
                 <h2 class="text-2xl font-bold mb-2">
@@ -50,6 +52,13 @@ const posts = (await getCollection('blog')).sort(
           ))
         }
       </ul>
+      {
+        posts.length > latestPosts.length && (
+          <div class="flex justify-center">
+            <ButtonLink href="/blog">More</ButtonLink>
+          </div>
+        )
+      }
     </div>
     <Footer />
   </body>
