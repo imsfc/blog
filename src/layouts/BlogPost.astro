@@ -7,76 +7,52 @@ import FormattedDate from '../components/FormattedDate.astro'
 
 type Props = CollectionEntry<'blog'>['data']
 
-const { title, description, pubDate, updatedDate } = Astro.props
+const { title, description, pubDate, updatedDate, categories } = Astro.props
 ---
 
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} />
-    <style>
-      main {
-        width: calc(100% - 2em);
-        max-width: 100%;
-        margin: 0;
-      }
-      .hero-image {
-        width: 100%;
-      }
-      .hero-image img {
-        display: block;
-        margin: 0 auto;
-        border-radius: 12px;
-        box-shadow: var(--box-shadow);
-      }
-      .prose {
-        width: 720px;
-        max-width: calc(100% - 2em);
-        margin: auto;
-        padding: 1em;
-        color: rgb(var(--gray-dark));
-      }
-      .title {
-        margin-bottom: 1em;
-        padding: 1em 0;
-        text-align: center;
-        line-height: 1;
-      }
-      .title h1 {
-        margin: 0 0 0.5em 0;
-      }
-      .date {
-        margin-bottom: 0.5em;
-        color: rgb(var(--gray));
-      }
-      .last-updated-on {
-        font-style: italic;
-      }
-    </style>
   </head>
 
-  <body>
+  <body class="bg-gray-100">
     <Header />
-    <main>
-      <article>
-        <div class="prose">
-          <div class="title">
-            <div class="date">
-              <FormattedDate date={pubDate} />
-              {
-                updatedDate && (
-                  <div class="last-updated-on">
-                    Last updated on <FormattedDate date={updatedDate} />
-                  </div>
-                )
-              }
-            </div>
-            <h1>{title}</h1>
-            <hr />
-          </div>
+    <div class="container mx-auto mt-8">
+      <!-- Article details -->
+      <article class="bg-white rounded-lg p-6 mb-4 shadow-md">
+        <h1 class="text-3xl font-bold mb-2">{title}</h1>
+        <p class="text-gray-600 text-sm mb-2">
+          Published on <FormattedDate date={pubDate} />
+        </p>
+        {
+          updatedDate && (
+            <p class="text-gray-600 text-sm mb-2">
+              Last Updated on <FormattedDate date={updatedDate} />
+            </p>
+          )
+        }
+        {
+          categories && (
+            <p class="text-gray-600 text-sm mb-2">
+              Categories:
+              {categories.map((category, index) => (
+                <>
+                  {index > 0 && <>, </>}
+                  <a href="#" class="text-blue-500">
+                    {category}
+                  </a>
+                </>
+              ))}
+            </p>
+          )
+        }
+
+        <div class="mt-4">
+          <!-- Article content -->
           <slot />
         </div>
       </article>
-    </main>
+    </div>
     <Footer />
   </body>
 </html>
